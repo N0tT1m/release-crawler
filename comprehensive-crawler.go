@@ -147,7 +147,7 @@ func fetchSitemapURLs() ([]string, error) {
 		},
 	}
 
-	sitemapURL := getEnv("SITEMAP_URL", "https://support.talkdesk.com/sitemap.xml")
+	sitemapURL := getEnv("SITEMAP_URL", "https://support.talkdesk.com/hc/sitemap.xml")
 	resp, err := client.Get(sitemapURL)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch sitemap from %s: %v", sitemapURL, err)
