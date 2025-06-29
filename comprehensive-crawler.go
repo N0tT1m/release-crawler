@@ -147,16 +147,20 @@ func fetchSitemapURLs() ([]string, error) {
 		},
 	}
 
-	sitemapURL := getEnv("SITEMAP_URL", "https://example.com/sitemap.xml")
+	sitemapURL := getEnv("SITEMAP_URL", "https://support.talkdesk.com/sitemap.xml")
 	resp, err := client.Get(sitemapURL)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to fetch sitemap from %s: %v", sitemapURL, err)
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode != 200 {
+		return nil, fmt.Errorf("sitemap returned HTTP %d from %s", resp.StatusCode, sitemapURL)
+	}
+
 	var sitemap Sitemap
 	if err := xml.NewDecoder(resp.Body).Decode(&sitemap); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to parse XML sitemap from %s (got HTML?): %v", sitemapURL, err)
 	}
 
 	var urls []string
